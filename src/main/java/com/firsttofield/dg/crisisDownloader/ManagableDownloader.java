@@ -66,20 +66,26 @@ public class ManagableDownloader implements Runnable {
             conn.setAllowUserInteraction(Boolean.FALSE);
             fileSize = conn.getContentLengthLong();
 
-            if (destination.exists()
-            //        && destination.length() != fileSize
-                    && !overwrite) {
-                status = DownloadStatus.CANCELED;
-                LOGGER.log(Level.INFO, String.format("Skipping download '%s', "
-                        + "file already exists and overwrite is not permitted.",
-                        source.toString()));
-                return;
-            } else {
-                LOGGER.log(Level.INFO, String.format("Overwritting "
-                        + "file '%s'.", destination.getAbsolutePath()));
+            if (destination.exists()) {
+                if (!overwrite) {
+                    status = DownloadStatus.CANCELED;
+                    LOGGER.log(Level.FINE, String.format("Skipping download '%s', "
+                            + "file already exists and overwrite is not permitted.",
+                            source.toString()));
+                    return;
+                } else {
+                    LOGGER.log(Level.FINE, String.format("Overwritting "
+                            + "file '%s'.", destination.getAbsolutePath()));
+                }
             }
 
             status = DownloadStatus.DOWNLOADING;
+            
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.log(Level.FINE, String.format("Downloading '%s' to '%s'.", 
+                        source.toString(), destination.getAbsolutePath()));
+            }
+            
             try (BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
                     BufferedOutputStream out = new BufferedOutputStream(
                             new FileOutputStream(destination, Boolean.FALSE))) {
