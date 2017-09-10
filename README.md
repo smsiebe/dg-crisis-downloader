@@ -9,6 +9,7 @@ event.
 # CLI Execution
 Currently CLI execution is the only way to use this tool.  The CLI requires 
 two arguments, -u and -d, the others are optional:
+
 | Short Arg | Long Arg |       Description                         |
 |:---------:|:--------:|-------------------------------------------|               
 | -u        |  --url   | DigitalGlobe Crisis Page URL              |
