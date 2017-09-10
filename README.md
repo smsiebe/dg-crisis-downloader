@@ -14,11 +14,12 @@ event.
 Currently CLI execution is the only way to use this tool.  The CLI requires 
 two arguments, -u and -d, the others are optional:
 
-| Short Arg | Long Arg |       Description                         |
-|:---------:|:--------:|-------------------------------------------|               
-| -u        |  --url   | DigitalGlobe Crisis Page URL              |
-| -d        |  --dest  | Destination folder                        |
-| -t        |--threads | Maximum number of threads (default 5)     |
+| Short Arg | Long Arg  |       Description                         |
+|:---------:|:---------:|-------------------------------------------|               
+| -u        |  --url    | DigitalGlobe Crisis Page URL              |
+| -d        |  --dest   | Destination folder                        |
+| -t        |--threads  | Maximum number of threads (default 5)     |
+| -o        |--overwrite| Overwrites file if already exists         |
 
 For example the following command will download all DigitalGlobe pre-event 
 imagery for Hurricane Irma into the folder `Z:\imagery\irma\pre`:
