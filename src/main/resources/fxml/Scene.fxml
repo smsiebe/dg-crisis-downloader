@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="611.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.firsttofield.dg.crisisDownloader.fx.FXMLController">
+    <children>
+        <Button fx:id="findImageryButton" layoutX="41.0" layoutY="76.0" onAction="#handleButtonAction" text="Find Imagery" />
+        <Label fx:id="label" layoutX="41.0" layoutY="34.0" minHeight="16" minWidth="69" text="Crisis Page URL:" />
+      <TextField fx:id="crisisPageUrlTextField" layoutX="134.0" layoutY="30.0" prefHeight="25.0" prefWidth="356.0" />
+      <TableView fx:id="imageryStatusTable" layoutX="41.0" layoutY="121.0" prefHeight="182.0" prefWidth="513.0">
+        <columns>
+          <TableColumn fx:id="imageryUrlColumn" prefWidth="397.0" text="URL" />
+          <TableColumn fx:id="iamgeryStatusColumn" minWidth="0.0" prefWidth="115.0" text="Status" />
+        </columns>
+      </TableView>
+      <Button fx:id="downloadImageryButton" layoutX="41.0" layoutY="427.0" mnemonicParsing="false" text="Download Imagery" />
+      <Label layoutX="41.0" layoutY="314.0" text="Max Simultaneous Downloads:" />
+      <TextField fx:id="numThreadsTextField" layoutX="213.0" layoutY="310.0" prefHeight="25.0" prefWidth="40.0" text="5" />
+      <TextField fx:id="downloadFolderTextField" layoutX="159.0" layoutY="347.0" prefHeight="25.0" prefWidth="240.0" />
+      <Label layoutX="41.0" layoutY="351.0" text="Download Folder:" />
+      <CheckBox fx:id="overwriteCheckbox" layoutX="41.0" layoutY="383.0" mnemonicParsing="false" text="Overwrite" />
+      <CheckBox fx:id="pyramidsCheckbox" layoutX="135.0" layoutY="383.0" mnemonicParsing="false" text="Download Pyramids (.tif.ovr)" />
+    </children>
+</AnchorPane>
