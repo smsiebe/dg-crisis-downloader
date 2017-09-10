@@ -77,6 +77,13 @@ public class MainApp extends Application {
                 .longOpt("dest")
                 .desc("Destination folder")
                 .build());
+        options.addOption(Option.builder("t")
+                .hasArg()
+                .argName("maxThreads")
+                .required(Boolean.FALSE)
+                .longOpt("threads")
+                .desc("Maximum number of threads")
+                .build());
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
@@ -86,7 +93,10 @@ public class MainApp extends Application {
         if (!dest.exists()) {
             dest.mkdirs();
         }
-        final DownloadManager mgr = new DownloadManager(5, dest);
+
+        final DownloadManager mgr = new DownloadManager(
+                Integer.valueOf(cmd.getOptionValue("t", "5")),
+                dest);
 
         ImageryUrlScraper scraper = new ImageryUrlScraper(
                 new URL(cmd.getOptionValue("u")));
