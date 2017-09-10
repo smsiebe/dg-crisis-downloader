@@ -40,7 +40,7 @@ public class ManagableDownloaderTest {
             fail("Unable to create temp file.");
         }
 
-        ManagableDownloader download = new ManagableDownloader(url, tmpDest);
+        ManagableDownloader download = new ManagableDownloader(url, tmpDest, true);
         download.run(); //executed synchronously
         assertEquals(486, 630, tmpDest.length());
     }
@@ -54,7 +54,7 @@ public class ManagableDownloaderTest {
         } catch (IOException ex) {
             fail("Unable to create temp file.");
         }
-        ManagableDownloader download = new ManagableDownloader(url, tmpDest);
+        ManagableDownloader download = new ManagableDownloader(url, tmpDest, true);
 
         assertEquals(DownloadStatus.PENDING, download.getStatus());
         download.cancel();
@@ -71,11 +71,34 @@ public class ManagableDownloaderTest {
         } catch (IOException ex) {
             fail("Unable to create temp file.");
         }
-        ManagableDownloader download = new ManagableDownloader(url, tmpDest);
+        ManagableDownloader download = new ManagableDownloader(url, tmpDest, true);
 
         assertEquals(-1f, download.getProgress(), 0f); //we don't know the file size yet because it hasn't been executed
         download.run(); //executed synchronously
         assertEquals(1f, download.getProgress(), 0f);
     }
 
+    @Test
+    public void testOverwriteProtection () {
+        URL url = ManagableDownloaderTest.class.getClassLoader().getResource(TEST_FILENAME);
+        File tmpDest = null;
+        try {
+            tmpDest = File.createTempFile("downloader", "test");
+        } catch (IOException ex) {
+            fail("Unable to create temp file.");
+        }
+        ManagableDownloader download = new ManagableDownloader(url, tmpDest, true);
+
+        assertEquals(-1f, download.getProgress(), 0f); //we don't know the file size yet because it hasn't been executed
+        download.run(); //executed synchronously
+        assertEquals(1f, download.getProgress(), 0f);
+        
+        //not attempt to download again
+        ManagableDownloader overwriteProtected = new ManagableDownloader(url, tmpDest, false);
+        
+        assertEquals(-1f, overwriteProtected.getProgress(), 0f); //we don't know the file size yet because it hasn't been executed
+        overwriteProtected.run(); //executed synchronously
+        assertEquals(0.0f, overwriteProtected.getProgress(), 0f);
+        assertEquals(DownloadStatus.CANCELED, overwriteProtected.getStatus());
+    }
 }

@@ -35,6 +35,7 @@ public class ManagableDownloader implements Runnable {
 
     private final URL source;
     private final File destination;
+    private final boolean overwrite;
     private long fileSize; //size of source file (-1 if unknown)
     private volatile long downloadSize; //number of bytes downloaded
     private volatile DownloadStatus status;
@@ -42,11 +43,12 @@ public class ManagableDownloader implements Runnable {
     private static final Logger LOGGER
             = Logger.getLogger(ManagableDownloader.class.getName());
 
-    public ManagableDownloader(URL source, File destination) {
+    public ManagableDownloader(URL source, File destination, boolean overwrite) {
         this.source = source;
         this.destination = destination;
         this.status = DownloadStatus.PENDING;
         this.fileSize = -1;
+        this.overwrite = overwrite;
     }
 
     @Override
@@ -63,6 +65,16 @@ public class ManagableDownloader implements Runnable {
             conn.setUseCaches(Boolean.TRUE);
             conn.setAllowUserInteraction(Boolean.FALSE);
             fileSize = conn.getContentLengthLong();
+
+            if (destination.exists()
+                    && destination.length() == fileSize
+                    && !overwrite) {
+                status = DownloadStatus.CANCELED;
+                LOGGER.log(Level.INFO, String.format("Skipping download '%s', "
+                        + "file already exists and overwrite is not permitted.",
+                        source.toString()));
+                return;
+            }
 
             status = DownloadStatus.DOWNLOADING;
             try (BufferedInputStream in = new BufferedInputStream(conn.getInputStream());

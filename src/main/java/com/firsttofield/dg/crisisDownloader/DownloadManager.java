@@ -33,29 +33,38 @@ public class DownloadManager {
 
     private final Collection<ManagableDownloader> downloads;
     private final Executor executor;
+    private final boolean overwrite;
     private File destinationDir;
+
+    private static final boolean DEFAULT_OVERWRITE = Boolean.FALSE;
 
     public DownloadManager() {
         this(Executors.newCachedThreadPool(),
-                new File(System.getProperty("java.io.tmpdir")));
+                new File(System.getProperty("java.io.tmpdir")),
+                DEFAULT_OVERWRITE);
     }
 
     public DownloadManager(int numThreads, File destinationDir) {
         this(Executors.newFixedThreadPool(numThreads),
-                destinationDir);
+                destinationDir, DEFAULT_OVERWRITE);
     }
 
-    public DownloadManager(Executor executor, File destinationDir) {
+    public DownloadManager(Executor executor, File destinationDir, boolean overwrite) {
 
         this.executor = executor;
         this.destinationDir = destinationDir;
         this.downloads = new ArrayList<>();
-
+        this.overwrite = overwrite;
     }
 
     public void download(URL source) {
+        this.download(source, this.overwrite);
+    }
+
+    public void download(URL source, boolean overwrite) {
         ManagableDownloader download = new ManagableDownloader(source,
-                new File(destinationDir, getFileName(source)));
+                new File(destinationDir, getFileName(source)),
+                overwrite);
         downloads.add(download);
         executor.execute(download);
     }
@@ -74,13 +83,13 @@ public class DownloadManager {
             }
         }
     }
-    
+
     /**
      * Clears the downloaded files, returning the download objects.
-     * 
+     *
      * @return downloads completed
      */
-    public Collection<ManagableDownloader> getDownloadedAndClear () {
+    public Collection<ManagableDownloader> getDownloadedAndClear() {
         Collection<ManagableDownloader> complete = downloads.stream()
                 .filter(this::isComplete)
                 .collect(Collectors.toList());
@@ -96,27 +105,27 @@ public class DownloadManager {
         String[] parts = url.getFile().split("/");
         return String.join("_", Arrays.copyOfRange(parts, 1, parts.length));
     }
-    
+
     /**
      * Returns true if there are any downloads PENDING or DOWNLOADING.
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isDownloading() {
         return this.downloads.stream()
                 .anyMatch(this::isComplete);
     }
-    
+
     /**
-     * 
+     *
      * @return number of tracked downloads (in any status)
      */
-    public int getTotalManaged () {
+    public int getTotalManaged() {
         return this.downloads.size();
     }
-    
+
     /**
-     * 
+     *
      * @return number of downloads PENDING or DOWNLOADING
      */
     public int getTotalDownloading() {
@@ -124,9 +133,9 @@ public class DownloadManager {
                 .filter(this::isComplete)
                 .count();
     }
-    
-    private boolean isComplete (ManagableDownloader d) {
-        return !(d.getStatus().equals(DownloadStatus.PENDING) 
-                        || d.getStatus().equals(DownloadStatus.DOWNLOADING));
+
+    private boolean isComplete(ManagableDownloader d) {
+        return !(d.getStatus().equals(DownloadStatus.PENDING)
+                || d.getStatus().equals(DownloadStatus.DOWNLOADING));
     }
 }
