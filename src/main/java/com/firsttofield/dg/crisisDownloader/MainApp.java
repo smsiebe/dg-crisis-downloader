@@ -19,6 +19,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +35,9 @@ import org.apache.commons.cli.Options;
 
 public class MainApp extends Application {
 
+    private static final Logger LOGGER = 
+            Logger.getLogger(MainApp.class.getName());
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
@@ -113,9 +118,9 @@ public class MainApp extends Application {
         });
 
         while (mgr.isDownloading()) {
-            mgr.getDownloadedAndClear().forEach((d) -> System.out.println(
+            mgr.getDownloadedAndClear().forEach((d) -> LOGGER.log(Level.FINE, 
                     String.format("Complete: %s", d)));
-            System.out.println(String.format("%d downloads remaining.", mgr.getTotalDownloading()));
+            LOGGER.log(Level.FINE, String.format("%d downloads remaining.", mgr.getTotalDownloading()));
             Thread.sleep(TimeUnit.SECONDS.toMillis(10));
         }
     }
