@@ -17,6 +17,7 @@ package com.firsttofield.dg.crisisDownloader;
 
 import java.io.File;
 import java.net.URL;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -84,6 +85,12 @@ public class MainApp extends Application {
                 .longOpt("threads")
                 .desc("Maximum number of threads")
                 .build());
+        options.addOption(Option.builder("o")
+                .hasArg(Boolean.FALSE)
+                .required(Boolean.FALSE)
+                .longOpt("overwrite")
+                .desc("Overwrites file if already exists")
+                .build());
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
@@ -95,8 +102,9 @@ public class MainApp extends Application {
         }
 
         final DownloadManager mgr = new DownloadManager(
-                Integer.valueOf(cmd.getOptionValue("t", "5")),
-                dest);
+                Executors.newFixedThreadPool(Integer.valueOf(cmd.getOptionValue("t", "5"))),
+                dest,
+                cmd.hasOption("o"));
 
         ImageryUrlScraper scraper = new ImageryUrlScraper(
                 new URL(cmd.getOptionValue("u")));
