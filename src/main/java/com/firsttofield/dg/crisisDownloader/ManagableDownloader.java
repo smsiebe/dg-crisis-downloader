@@ -67,13 +67,16 @@ public class ManagableDownloader implements Runnable {
             fileSize = conn.getContentLengthLong();
 
             if (destination.exists()
-                    && destination.length() == fileSize
+            //        && destination.length() != fileSize
                     && !overwrite) {
                 status = DownloadStatus.CANCELED;
                 LOGGER.log(Level.INFO, String.format("Skipping download '%s', "
                         + "file already exists and overwrite is not permitted.",
                         source.toString()));
                 return;
+            } else {
+                LOGGER.log(Level.INFO, String.format("Overwritting "
+                        + "file '%s'.", destination.getAbsolutePath()));
             }
 
             status = DownloadStatus.DOWNLOADING;
