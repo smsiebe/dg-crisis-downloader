@@ -6,9 +6,14 @@ JavaFX interface isn't stitched to the controller yet so the CLI interface
 is the only way to kick it off (see MainApp).  I'll clean this up after the 
 event.
 
+# Build/Runtime Dependencies
+- [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Maven](http://maven.apache.org) (build-time, not runtime)
+
 # CLI Execution
 Currently CLI execution is the only way to use this tool.  The CLI requires 
 two arguments, -u and -d, the others are optional:
+
 | Short Arg | Long Arg |       Description                         |
 |:---------:|:--------:|-------------------------------------------|               
 | -u        |  --url   | DigitalGlobe Crisis Page URL              |
