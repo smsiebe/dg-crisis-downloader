@@ -28,7 +28,7 @@ public class DownloadManagerTest {
 
     private static final String TEST_FILENAME = "irma_pre.html";
 
-    @Test
+   // @Test
     public void testDownload() {
         DownloadManager mgr = new DownloadManager();
         mgr.download(DownloadManagerTest.class.getClassLoader().getResource(TEST_FILENAME));
